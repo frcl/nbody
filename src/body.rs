@@ -29,18 +29,19 @@ impl Body {
     }
 
     pub fn step(&mut self, dt: f64, others: Vec<&Body>) {
+        self.pos += dt/2.0*self.vel;
+
         // F = m a
         // F = - G m M r / |r|^3
         // => Δv = - Σ_i Δt G M_i (r - r_i)/|r-r_i|^3
         // => Δr = Δt v
-        self.pos += dt*self.vel;
-
         let s: Vec2 = others.iter().map(|b| {
             let diff = self.pos-b.pos;
             diff*(b.mass/diff.norm().powi(3))
         }).sum();
 
         self.vel -= dt*G*s;
+        self.pos += dt/2.0*self.vel;
     }
 
     pub fn energy(&self, others: Vec<&Body>) -> f64 {
