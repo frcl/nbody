@@ -85,3 +85,30 @@ impl fmt::Display for Vec2 {
         write!(f, "{}, {}", self.0, self.1)
     }
 }
+
+
+#[cfg(test)]
+mod test {
+    use crate::vec::*;
+
+    #[test]
+    fn vec_simple_arith() {
+        assert_eq!(Vec2(1.5, 0.5) + Vec2(0.5, -0.5), Vec2(2.0, 0.0));
+        assert_eq!(Vec2(1.5, 1.0) - Vec2(0.5, 1.0), Vec2(1.0, 0.0));
+        assert_eq!(2.0*Vec2(1.5, 0.25), Vec2(3.0, 0.5));
+        assert_eq!(Vec2(1.5, 0.25)*2.0, Vec2(3.0, 0.5));
+    }
+
+    #[test]
+    fn vec_scalar_prod() {
+        assert_eq!(Vec2(1.0, 1.0) * Vec2(1.0, -1.0), 0.0);
+        assert_eq!(Vec2(3.2, 4.2) * Vec2(1.0, 0.0), 3.2);
+    }
+
+    #[test]
+    fn vec_sum() {
+        assert_eq!(vec![Vec2(1.0, 2.0), Vec2(2.0, 3.0), Vec2(3.0, 4.0)]
+                       .into_iter().sum::<Vec2>(),
+                   Vec2(6.0, 9.0));
+    }
+}
