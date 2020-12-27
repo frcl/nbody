@@ -3,7 +3,7 @@ use crate::vec::*;
 
 
 const G: f64 = 0.01;
-const MIN_DIST: f64 = f64::MIN_POSITIVE*65536f64;
+const MIN_VEL: f64 = f64::MIN_POSITIVE*16777216f64;
 
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
@@ -21,21 +21,11 @@ impl Body {
     }
 
     pub fn estimate_timestep(&self, other: &Body, dist_threshold: f64) -> Option<f64> {
-        if self.vel.norm() < MIN_DIST {
-            return None
+        if self.vel.norm() <= MIN_VEL {
+            return None;
         }
         let diff = other.pos-self.pos;
-        let t = diff*self.vel/self.vel.norm_sq();
-        if t <= 0.0 {
-            return None
-        }
-        let r = dist_threshold.powi(2)*diff.norm_sq();
-        let d = (t*self.vel-diff).norm_sq();
-        if r < d {
-            return None
-        }
-        let val = t - (r - d).sqrt()/self.vel.norm();
-        Some(val)
+        Some(diff.norm()*dist_threshold/self.vel.norm())
     }
 
     pub fn step(&mut self, dt: f64, others: Vec<&Body>) {
