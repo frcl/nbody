@@ -76,5 +76,7 @@ fn print_stats(i: f64, bodies: &Vec<Body>) {
     for b in bodies {
         print!(", {}", b.pos);
     }
-    print!("\n");
+    print!(", {}\n", bodies.iter().map(|b|
+        b.energy(bodies.iter().filter(|&x| x != b).collect())
+    ).fold(0.0, |a,b| a+b));
 }

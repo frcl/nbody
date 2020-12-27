@@ -42,6 +42,11 @@ impl Body {
 
         self.vel -= dt*G*s;
     }
+
+    pub fn energy(&self, others: Vec<&Body>) -> f64 {
+        0.5*self.mass*self.vel.norm_sq()
+            - G*self.mass*others.iter().map(|b| b.mass/(self.pos-b.pos).norm()).fold(0.0, |a,b| a+b)
+    }
 }
 
 
